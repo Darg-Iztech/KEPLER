@@ -5,9 +5,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--text", type=str, help="path to original text file")
 parser.add_argument("--train", type=str, help="path to original training data file")
 parser.add_argument("--valid", type=str, help="path to original validation data file")
+parser.add_argument("--test", type=str, help="path to original test data file")
 parser.add_argument("--converted_text", type=str, default="Qdesc.txt", help="path to converted text file")
 parser.add_argument("--converted_train", type=str, default="train.txt", help="path to converted training file")
 parser.add_argument("--converted_valid", type=str, default="valid.txt", help="path to converted validation file")
+parser.add_argument("--converted_test", type=str, default="test.txt", help="path to converted test file")
 
 if __name__=='__main__':
     args = parser.parse_args()
@@ -29,7 +31,7 @@ if __name__=='__main__':
                 fout.write(desc+"\n")
                 Qid[data[0]] = Cnt#idx
                 Cnt+=1
-    def convert_triples(inFile, outFile):
+    def convert_triplets(inFile, outFile):
         with open(inFile, "r") as fin:
             with open(outFile, "w") as fout:
                 lines = fin.readlines()
@@ -42,5 +44,6 @@ if __name__=='__main__':
                     if data[1] not in Pid:
                         Pid[data[1]] = len(Pid)
                     fout.write("%d %d %d\n"%(Qid[data[0]], Pid[data[1]], Qid[data[2]]))
-    convert_triples(args.train, args.converted_train)
-    convert_triples(args.valid, args.converted_valid)
+    convert_triplets(args.train, args.converted_train)
+    convert_triplets(args.valid, args.converted_valid)
+    convert_triplets(args.test, args.converted_test)

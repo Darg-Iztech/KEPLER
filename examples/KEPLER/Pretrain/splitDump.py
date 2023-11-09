@@ -38,8 +38,10 @@ if __name__ == '__main__':
             os.mkdir(os.path.join(nPath,nm))
             if nm in ["relation", "sizes"]:
                 copyfile(os.path.join(args.Path, nm, "valid.npy"), os.path.join(nPath, nm, "valid.npy"))
+                copyfile(os.path.join(args.Path, nm, "test.bpe"), os.path.join(nPath, nm, "test.bpe"))
             else:
                 copyfile(os.path.join(args.Path, nm, "valid.bpe"), os.path.join(nPath, nm, "valid.bpe"))
+                copyfile(os.path.join(args.Path, nm, "test.bpe"), os.path.join(nPath, nm, "test.bpe"))
         copyfile(os.path.join(args.Path, "count.json"), os.path.join(nPath, "count.json"))
     for nm in ["head","tail"]:
         lines = open(os.path.join(args.Path, nm, "train.bpe"), "r").readlines()

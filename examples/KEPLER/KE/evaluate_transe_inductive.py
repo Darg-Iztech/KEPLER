@@ -73,7 +73,7 @@ def get_mrr_score():
     with open('eval_result.pkl', 'rb') as file:
         predictions = pickle.load(file)
 
-    with open('files_for_inductive_cite/citation_triples_test.txt', "r") as file:
+    with open('files_for_inductive_cite/citation_triplets_test.txt', "r") as file:
         ground_truths = [line.rstrip().split("\t")[2] for line in file]
 
     print(f'Ground:{len(ground_truths)} - Predictions:{len(predictions)} ')

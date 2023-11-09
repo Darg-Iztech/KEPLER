@@ -12,9 +12,10 @@ parser.add_argument("--dumpPath", type=str, help="path to store output files, do
 parser.add_argument("-ns", "--negative_sampling_size", type=int, default=1)
 parser.add_argument("--train", type=str, help="file name of training triplets")
 parser.add_argument("--valid", type=str, help="file name of validation triplets")
+parser.add_argument("--test", type=str, help="file name of test triplets")
 parser.add_argument("--ent_desc", type=str, help="path to the entity description file (after BPE encoding)")
 
-def getTriples(path):
+def getTriplets(path):
     res=[]
     with open(path, "r") as fin:
         lines=fin.readlines()
@@ -23,9 +24,9 @@ def getTriples(path):
             res.append((tmp[0], tmp[1], tmp[2]))
     return res
 
-def count_frequency(triples, start=4):
+def count_frequency(triplets, start=4):
     count = {}
-    for head, relation, tail in triples:
+    for head, relation, tail in triplets:
         hr=",".join([str(head), str(relation)])
         tr=",".join([str(tail), str(-relation-1)])
         if hr not in count:
@@ -38,11 +39,11 @@ def count_frequency(triples, start=4):
             count[tr] += 1
     return count
     
-def get_true_head_and_tail(triples):
+def get_true_head_and_tail(triplets):
     true_head = {}
     true_tail = {}
 
-    for head, relation, tail in triples:
+    for head, relation, tail in triplets:
         if (head, relation) not in true_tail:
             true_tail[(head, relation)] = []
         true_tail[(head, relation)].append(tail)
@@ -59,7 +60,7 @@ def get_true_head_and_tail(triples):
 def getTokens(s):
     return min(len(s.split()),512)
 
-def genSample(triples, args, split, Qdesc, true_head, true_tail):
+def genSample(triplets, args, split, Qdesc, true_head, true_tail):
     fHead = open(os.path.join(args.dumpPath, "head", split)+".bpe", "w")
     fTail = open(os.path.join(args.dumpPath, "tail", split)+".bpe", "w")
     fnHead = open(os.path.join(args.dumpPath, "negHead", split)+".bpe", "w")
@@ -67,7 +68,7 @@ def genSample(triples, args, split, Qdesc, true_head, true_tail):
     rel=[]
     sizes=[]
     nE=len(Qdesc)
-    for h,r,t in triples:
+    for h,r,t in triplets:
         rel.append(r)
         fHead.write(Qdesc[h])
         fTail.write(Qdesc[t])
@@ -113,21 +114,24 @@ def genSample(triples, args, split, Qdesc, true_head, true_tail):
 
 if __name__=='__main__':
     args=parser.parse_args()
-    TrainTriples = getTriples(args.train)
-    ValidTriples = getTriples(args.valid)
-    AllTriples = TrainTriples + ValidTriples
+    TrainTriplets = getTriplets(args.train)
+    ValidTriplets = getTriplets(args.valid)
+    TestTriplets = getTriplets(args.test)
+    AllTriplets = TrainTriplets + ValidTriplets + TestTriplets
     Qdesc=[]
     with open(args.ent_desc, "r") as fin:
         Qdesc=fin.readlines()
     print(str(datetime.now())+" load finish")
-    count = count_frequency(AllTriples)
-    true_head, true_tail = get_true_head_and_tail(AllTriples)
+    count = count_frequency(AllTriplets)
+    true_head, true_tail = get_true_head_and_tail(AllTriplets)
     os.mkdir(args.dumpPath)
     json.dump(count, open(os.path.join(args.dumpPath, "count.json"), "w"))
     for nm in ["head","tail","negHead","negTail","relation","sizes"]:
         os.mkdir(os.path.join(args.dumpPath, nm))
     print(str(datetime.now()) + " preparation finished")
-    genSample(TrainTriples, args, "train", Qdesc, true_head, true_tail)
+    genSample(TrainTriplets, args, "train", Qdesc, true_head, true_tail)
     print(str(datetime.now())+" training set finished")
-    genSample(ValidTriples, args, "valid", Qdesc, true_head, true_tail)
+    genSample(ValidTriplets, args, "valid", Qdesc, true_head, true_tail)
+    print(str(datetime.now())+" all finished")
+    genSample(TestTriplets, args, "test", Qdesc, true_head, true_tail)
     print(str(datetime.now())+" all finished")

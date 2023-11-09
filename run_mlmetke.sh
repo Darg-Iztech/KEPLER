@@ -1,19 +1,20 @@
 #!/bin/bash
-TOTAL_UPDATES=125000     # Total number of training steps
-WARMUP_UPDATES=10000     # Warmup the learning rate over this many updates
-LR=6e-04                 # Peak LR for polynomial LR scheduler
+TOTAL_UPDATES=124000    # Total number of training steps
+                        # EPOCHS = TOTAL_UPDATES / MAX_SENTENCES
+                        # 1 epochs take ? minutes in AUDP
+
+WARMUP_UPDATES=10000    # Warmup the learning rate over this many updates
+LR=6e-04                # Peak LR for polynomial LR scheduler
 NUM_CLASSES=2
-MAX_SENTENCES=16        # Batch size # Set to 2 in DARG 
+MAX_SENTENCES=16        # Batch size # Set to 16 in AUDP, Set to 2 in DARG 
 NUM_NODES=1		# Number of machines
-ROBERTA_PATH="/projects/KEPLER/checkpoints_roberta_mlm_125k/checkpoint_best.pt" # Path to the original roberta model
-CHECKPOINT_PATH="checkpoints_mlmke_nheads_disabled_125k" #Directory to store the checkpoints
+
+CHECKPOINT_PATH="checkpoints_nhead_disabled_mlmetke_acl_cite" #Directory to store the checkpoints
 UPDATE_FREQ=`expr 784 / $NUM_NODES` # Increase the batch size
 DATA_DIR="/projects/KEPLER_DATA"
-MLM_DATA="/projects/KEPLER_DATA/CITE_MLM/data-bin/CITE"
-
-#Path to the preprocessed KE dataset, each item corresponds to a data directory for one epoch
-#KE_DATA=$DATA_DIR/CITE_KE/CITE1_0:$DATA_DIR/CITE_KE/CITE1_1:$DATA_DIR/CITE_KE/CITE1_2:$DATA_DIR/CITE_KE/CITE1_3
-KE_DATA=$DATA_DIR/CITE_KE/CITE1_0
+MLM_DATA=$DATA_DIR/ACL_CITE_MLM/preprocessed
+KE_DATA=$DATA_DIR/ACL_CITE_KE/preprocessed
+ROBERTA_PATH=$DATA_DIR/roberta_base_model.pt # Path to the original roberta model
 
 DIST_SIZE=`expr $NUM_NODES \* 1`
 

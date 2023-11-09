@@ -71,7 +71,7 @@ class MLMetKETask(FairseqTask):
                             help='The number of negative samples per positive sample for Knowledge Embedding' )
         parser.add_argument('--ke-model', default='TransE', type=str,
                             help='Knowledge Embedding Method (TransE, RotatE, etc)')
-        parser.add_argument('--ke-head-name', default='wikiData', type=str,
+        parser.add_argument('--ke-head-name', default='acl', type=str,
                             help='Knowledge Embedding head name (wikiData , etc)')
         parser.add_argument('--ke-head-name2', default='wordnet', type=str,
                             help='Knowledge Embedding head name (wikiData , etc)')

@@ -37,7 +37,7 @@ if __name__=='__main__':
     desc = desc_dataset(os.path.join(args.data, 'train'), dictionary)
     roberta = RobertaModel.from_pretrained(args.ckpt_dir, checkpoint_file = args.ckpt)
     roberta.eval()
-    np.save(args.rel_emb, roberta.model.ke_heads['wikiData'].relation_emb.weight.cpu().detach().numpy())
+    np.save(args.rel_emb, roberta.model.ke_heads['acl'].relation_emb.weight.cpu().detach().numpy())
     entity_embs=[]
     for i in range(0, len(desc)//args.batch_size+1):
         s = i*args.batch_size
