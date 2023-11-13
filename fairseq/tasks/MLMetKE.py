@@ -72,9 +72,9 @@ class MLMetKETask(FairseqTask):
         parser.add_argument('--ke-model', default='TransE', type=str,
                             help='Knowledge Embedding Method (TransE, RotatE, etc)')
         parser.add_argument('--ke-head-name', default='acl', type=str,
-                            help='Knowledge Embedding head name (wikiData , etc)')
+                            help='Knowledge Embedding head name (wikiData, acl, etc)')
         parser.add_argument('--ke-head-name2', default='wordnet', type=str,
-                            help='Knowledge Embedding head name (wikiData , etc)')
+                            help='Knowledge Embedding head name (wikiData, acl, etc)')
         parser.add_argument('--init-token', type=int, default=None,
                             help='add token at the beginning of each batch item')
         parser.add_argument('--separator-token', type=int, default=None,

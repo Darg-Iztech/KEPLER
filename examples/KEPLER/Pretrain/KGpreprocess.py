@@ -132,6 +132,6 @@ if __name__=='__main__':
     genSample(TrainTriplets, args, "train", Qdesc, true_head, true_tail)
     print(str(datetime.now())+" training set finished")
     genSample(ValidTriplets, args, "valid", Qdesc, true_head, true_tail)
-    print(str(datetime.now())+" all finished")
+    print(str(datetime.now())+" validation finished")
     genSample(TestTriplets, args, "test", Qdesc, true_head, true_tail)
-    print(str(datetime.now())+" all finished")
+    print(str(datetime.now())+" test finished")

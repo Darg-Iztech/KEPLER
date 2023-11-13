@@ -34,7 +34,7 @@ def desc_dataset(path, dictionary):
 if __name__=='__main__':
     args = parser.parse_args()
     dictionary = Dictionary.load(args.dict)
-    desc = desc_dataset(os.path.join(args.data, 'train'), dictionary)
+    desc = desc_dataset(args.data, dictionary)
     roberta = RobertaModel.from_pretrained(args.ckpt_dir, checkpoint_file = args.ckpt)
     roberta.eval()
     np.save(args.rel_emb, roberta.model.ke_heads['acl'].relation_emb.weight.cpu().detach().numpy())

@@ -9,7 +9,7 @@ NUM_CLASSES=2
 MAX_SENTENCES=16        # Batch size # Set to 16 in AUDP, Set to 2 in DARG 
 NUM_NODES=1		# Number of machines
 
-CHECKPOINT_PATH="checkpoints_nhead_disabled_mlmetke_acl_cite" #Directory to store the checkpoints
+CHECKPOINT_PATH="checkpoints_nhead_disabled_mlmetke_acl_cite_local" # Directory to store the checkpoints
 UPDATE_FREQ=`expr 784 / $NUM_NODES` # Increase the batch size
 DATA_DIR="/projects/KEPLER_DATA"
 MLM_DATA=$DATA_DIR/ACL_CITE_MLM/preprocessed

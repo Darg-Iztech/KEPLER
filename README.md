@@ -213,24 +213,51 @@ First, install the `graphvite` package in[`./graphvite`](/graphvite) following i
 
 ------------------------------------------
 
-**For citation prediction task:** Acquire the necessary Qdesc txt file with [`convert_for_testing.py`](examples/KEPLER/Pretrain/convert_for_testing.py). This also creates the entity2id.json and relation2id.json files inside a specified output folder. These files are required for the final evaluation step. The arguments are as following:
+**For citation prediction task:** 
 
-* `--text`: The corpus file from the dataset. For our work, it should contain contexts (heads) and references (tails).
-* `--train`: The training split of the context-reference triplets.
-* `--valid`: The validation split of the context-reference triplets.
-* `--converted_text`: The output txt file that contains the converted data from the corpus.
-* `--converted_train`: The output file that contains the converted training split.
-* `--converted_valid`: The output file that contains the converted validation split.
-* `--to_id_folder_path`: The path to the output folder that will contain entity2id.json and relation2id.json files. Default folder name is "./2id_files".
+1. Run [`dataprep_test.sh`](examples/KEPLER/Pretrain/dataprep_test.sh) to generate `corpus/all.bpe`, `triplets/test.bpe`, `id_mapping/entity2id.json`, and `id_mapping/relation2id.json`.
 
-**For citation prediction task:** Acquire the necessary Qdesc bpe file with [`multiprocessing_bpe_encoder.py`](examples/roberta/multiprocessing_bpe_encoder.py). The arguments are as following:
+```bash
+# Required directory structure:
+# TEST_DATA
+# ├── raw_corpus
+# │   └── all.txt   --> This should include all entity ids in triplets/test.txt
+# ├── gpt2_bpe
+# │   ├── dict.txt
+# │   ├── encoder.json
+# │   └── vocab.bpe
+# ├── id_mapping
+# │   └── citations_per_paper.json
+# ├── embeddings
+# └── triplets
+#     └── test.txt
+```
 
-* `--encoder-json`: The encoder.json file inside gpt2_bpe folder. This folder should have already been created during the initial preprocessing of the dataset. This contents of this folder works as the tokenizer of the data. Alternative link to the file: https://dl.fbaipublicfiles.com/fairseq/gpt2_bpe/encoder.json
-* `--vocab-bpe`: The vocab.bpe file inside the same gpt2_bpe folder explained above. Alternative link to the file: https://dl.fbaipublicfiles.com/fairseq/gpt2_bpe/vocab.bpe
-* `--inputs`: The file that comes from the converted_text parameter of the previous step.
-* `--outputs`: The output bpe file that has been converted from the file given to the --inputs.
-* `--keep-empty`: Use this parameter directly without any input.
-* `--workers`: Use this parameter to set the number of workers while the code is working. We have observed that this works with 10 as input.
+2. Run [`test_inductive.sh`](examples/KEPLER/KE/test_inductive.sh) to generate `EntityEmb.npy` and `RelEmb.py` and start inductive evaluation.
+
+```bash
+# Required directory structure: 
+# TEST_DATA
+# ├── raw_corpus
+# │   └── all.txt   --> This should include all train/valid/test data
+# ├── corpus
+# │   ├── all.txt   --> This should include all train/valid/test data
+# │   └── all.bpe   --> This should include all train/valid/test data
+# ├── gpt2_bpe
+# │   ├── dict.txt
+# │   ├── encoder.json
+# │   └── vocab.bpe
+# ├── id_mapping
+# │   ├── citations_per_paper.json
+# │   ├── relation2id.json
+# │   └── entity2id.json
+# ├── embeddings
+# └── triplets
+#     ├── test.txt
+#     └── test.bpe
+```
+
+All descriptions and paramaters are available in shell scripts.
 
 ------------------------------------------
 
@@ -244,7 +271,7 @@ Generate the entity embeddings and relation embeddings with[`generate_embeddings
 * `--rel_emb`: filename to dump relation embeddings (in numpy format).
 * `--batch_size`: batch size used in inference. **--> This can be 16, 32, 64, etc. for our task.**
 
-Then use [`evaluate_transe_transductive.py`](examples/KEPLER/KE/evaluate_transe_transductive.py) and [ `ke_tool/evaluate_transe_inductive.py`](examples/KEPLER/KE/evaluate_transe_inductive.py) for KE evaluation. **For our task, we only need to use the inductive code.** The arguments are as following:
+Then use [`evaluate_transe_transductive.py`](examples/KEPLER/KE/evaluate_transe_transductive.py) and [ `evaluate_transe_inductive.py`](examples/KEPLER/KE/evaluate_transe_inductive.py) for KE evaluation. **For our task, we only need to use the inductive code.** The arguments are as following:
 
 * `--entity_embeddings`: a numpy file storing the entity embeddings.
 * `--relation_embeddings`: a numpy file storing the relation embeddings.
