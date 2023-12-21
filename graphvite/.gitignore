@@ -9,3 +9,4 @@
 
 # JetBrains
 /.idea
+__pycache__/

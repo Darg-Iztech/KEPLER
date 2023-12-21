@@ -1,5 +1,5 @@
 #!/bin/bash
-TOTAL_UPDATES=124000    # Total number of training steps
+TOTAL_UPDATES=100000    # Total number of training steps
                         # EPOCHS = TOTAL_UPDATES / MAX_SENTENCES
                         # 1 epochs take ? minutes in AUDP
 
@@ -8,10 +8,10 @@ LR=6e-04                # Peak LR for polynomial LR scheduler
 NUM_CLASSES=2
 MAX_SENTENCES=16        # Batch size # Set to 16 in AUDP, Set to 2 in DARG 
 NUM_NODES=1		# Number of machines
-
-CHECKPOINT_PATH="checkpoints_nhead_disabled_mlmetke_acl_cite_local" # Directory to store the checkpoints
+NEGATIVE_SAMPLING_TYPE="LOCAL"
+CHECKPOINT_PATH="checkpoints_nhead_disabled_MLMetKE_ACL_$NEGATIVE_SAMPLING_TYPE" # Directory to store the checkpoints
 UPDATE_FREQ=`expr 784 / $NUM_NODES` # Increase the batch size
-DATA_DIR="/projects/KEPLER_DATA"
+DATA_DIR="/projects/KEPLER_DATA/ACL_$NEGATIVE_SAMPLING_TYPE"
 MLM_DATA=$DATA_DIR/ACL_CITE_MLM/preprocessed
 KE_DATA=$DATA_DIR/ACL_CITE_KE/preprocessed
 ROBERTA_PATH=$DATA_DIR/roberta_base_model.pt # Path to the original roberta model
